@@ -1,0 +1,21 @@
+{
+  "name": "oscar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "nodemon .",
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/o-sca/comp4724-lab4.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/o-sca/comp4724-lab4/issues"
+  },
+  "homepage": "https://github.com/o-sca/comp4724-lab4#readme"
+}
