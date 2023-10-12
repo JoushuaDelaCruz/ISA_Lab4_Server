@@ -39,7 +39,10 @@ const selectSuccessHandler = (response) => {
     container.innerHTML += JSON.stringify(data) + "<br>";
   });
 };
-
+/**
+ * The selectPattern and insertPattern are taken from (https://chat.openai.com/)
+ * to check if the user input is a select or insert statement
+ */
 const executeSQL = () => {
   const query = document.getElementById("sqlStatement").value;
   const url = SERVER_URL + `\"${query}\"`;
