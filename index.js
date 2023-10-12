@@ -5,14 +5,15 @@ const PORT = process.env.PORT || 3000;
 
 /**
  * @param {string} query
+ * @param {number} statusCode
  * @param {http.ServerResponse} res
  * @returns {Promise<http.ServerResponse>} result of the query
  */
-const dbQuery = async (query, res) => {
+const dbQuery = async (query, statusCode, res) => {
   try {
     const result = await execute(query);
     return res
-      .writeHead(200, { "Content-Type": "application/json" })
+      .writeHead(statusCode, { "Content-Type": "application/json" })
       .end(JSON.stringify({ result }));
   } catch (err) {
     return res
@@ -46,7 +47,7 @@ const validatePath = (paths, requiredPaths) => {
   return true;
 };
 
-const listener = (req, res) => {
+const listener = async (req, res) => {
   // CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST");
@@ -65,8 +66,10 @@ const listener = (req, res) => {
 
   const query = extractSqlQueryPath(paths);
 
-  if (req.method === "GET" || req.method === "POST") {
-    return dbQuery(query, res);
+  if (req.method === "GET") {
+    dbQuery(query, 200, res);
+  } else if (req.method === "POST") {
+    dbQuery(query, 201, res);
   } else {
     res
       .writeHead(405, { "Content-Type": "text/html" })
