@@ -29,7 +29,7 @@ const createPatientTable = async () => {
     CREATE TABLE IF NOT EXISTS patient (
       patientid INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
       name VARCHAR(100),
-      dateOfBirth DATETIME,
+      dateOfBirth DATETIME
     )`;
 
   await _pool.execute(query);
