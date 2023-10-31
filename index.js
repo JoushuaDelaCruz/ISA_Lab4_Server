@@ -1,6 +1,5 @@
 const http = require("http");
 const url = require("url");
-const querystring = require("querystring");
 const { execute } = require("./database");
 const PORT = process.env.PORT || 3000;
 
@@ -31,7 +30,7 @@ const dbQuery = async (query, statusCode, res) => {
  */
 const extractSqlQueryPath = (paths) => {
   const query = paths[paths.length - 1];
-  return querystring.unescape(query);
+  return query.replace(/%20/g, " ").replace(/%22/g, " ");
 };
 
 /**
