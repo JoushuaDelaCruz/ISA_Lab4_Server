@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Database</title>
+        <link rel="stylesheet" href="./css/database.css">
+    </head>
+    <body>
+        <main>
+            <div class="insert-container">
+                <p> 
+                    Insert Data in Table: <br>
+                    ("Sara Brown", "1901-01-01"), <br>
+                    ("John Smith", "1941-01-01"), <br>
+                    ("Jack Ma", "1961-01-30"), <br>
+                    ("Elon Musk", "1999-01-01") <br>
+                </p>
+                <button type="button" onclick="insertTable()"> Insert </button>
+            </div>
+            <section class="sql-query-container">
+                <textarea id="sqlStatement" cols="30" rows="10"></textarea>
+                <button type="button" onclick="executeSQL()"> Execute </button>
+            </section>
+            <section id="resultsContainer">
+                
+            </section>
+        </main>
+        <script src="./js/database.js"></script>
+    </body>
+</html>
