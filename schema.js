@@ -30,7 +30,7 @@ export class Schema {
 }
 
 export class Entry {
-  constructor({ word, definition, word_language, definition_language }) {
+  constructor({ word, definition, word_language, definition_language } = {}) {
     this._word = word;
     this._definition = definition;
     this._word_language = word_language;
