@@ -86,5 +86,6 @@ export const handleNotFoundError = (param, res) => {
 
 export const NotFoundError = (_req, res) => {
   res.status(404);
+  res.send("Not Found");
   return;
 };
