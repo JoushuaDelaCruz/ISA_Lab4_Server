@@ -1,36 +1,28 @@
-import express from "express";
 import cors from "cors";
+import express from "express";
 import {
-  queryEntryCount,
   deleteDefinition,
   insertDefinition,
-  updateDefinition,
   queryDefinition,
   queryLanguage,
+  updateDefinition,
 } from "./database.js";
-
-const NotFoundError = (_req, res) => {
-  res.status(404);
-  return;
-};
-
-const handleError = async (error, res) => {
-  const result = await queryEntryCount();
-  res
-    .status(error.status || 400)
-    .json({ error: error.message, entries: result });
-  return;
-};
-
+import {
+  NotFoundError,
+  handleConflictResponse,
+  handleCreateSuccessResponse,
+  handleUnknownResponse,
+} from "./handler.js";
+import {
+  validateBody,
+  validateBodyWithWord,
+  validateQuery,
+} from "./validator.js";
 const DefinitionRouter = () => {
   const router = express.Router();
 
-  router.post("/", async (req, res) => {
+  router.post("/", validateBodyWithWord, async (req, res) => {
     const { word, definition, word_language, definition_language } = req.body;
-    if (!word || !definition || !word_language || !definition_language) {
-      return handleError({ status: 400, message: "Missing parameters" }, res);
-    }
-
     const result = await insertDefinition({
       word,
       definition,
@@ -40,31 +32,17 @@ const DefinitionRouter = () => {
 
     if (result.error) {
       if (result.error === "Entry already exists") {
-        return handleError(
-          { status: 409, message: "Entry already exists" },
-          res
-        );
+        return handleConflictResponse(req.body, res);
       }
-      return handleError({ status: 500, message: result.error }, res);
+      return handleUnknownResponse(result.error, res);
     }
 
-    const count = await queryEntryCount();
-
-    res.json({ count, ...result });
-    return;
+    return handleCreateSuccessResponse(req.body, res);
   });
 
-  router.patch("/:word", async (req, res) => {
+  router.patch("/:word", validateQuery, validateBody, async (req, res) => {
     const word = req.params.word;
     const { definition, word_language, definition_language } = req.body;
-
-    if (!word) {
-      return handleError({ status: 400, message: "Missing word" }, res);
-    }
-
-    if (!definition && !word_language && !definition_language) {
-      return handleError({ status: 400, message: "Missing parameters" }, res);
-    }
 
     const result = await updateDefinition({
       word,
@@ -73,17 +51,11 @@ const DefinitionRouter = () => {
       definition_language,
     });
 
-    const count = await queryEntryCount();
-
-    res.json({ count, ...result });
     return;
   });
 
-  router.get("/:word", async (req, res) => {
+  router.get("/:word", validateQuery, async (req, res) => {
     const word = req.params.word;
-    if (!word) {
-      return handleError({ status: 400, message: "Missing word" }, res);
-    }
     const result = await queryDefinition(word);
     res.json(result);
     return;
@@ -94,15 +66,11 @@ const DefinitionRouter = () => {
    * `deleted` field in response indicates if affected rows > 0.
    * @returns {boolean} true if entry was deleted, false otherwise.
    */
-  router.delete("/:word", async (req, res) => {
+  router.delete("/:word", validateQuery, async (req, res) => {
     const word = req.params.word;
-    if (!word) {
-      return handleError({ status: 400, message: "Missing word" }, res);
-    }
     const result = await deleteDefinition(word);
-    const count = await queryEntryCount();
 
-    res.json({ count, ...result });
+    res.json({ result });
     return;
   });
 
