@@ -18,6 +18,24 @@ export const handleCreateSuccessResponse = (body, res) => {
   return _handleResponse(201, schema, res);
 };
 
+export const handleUpdateSuccessResponse = (param, body, res) => {
+  const schema = new Schema();
+  const entry = new Entry(body);
+
+  schema.message = `Successfully updated entry for the word '${param}'`;
+  schema.entry = entry;
+
+  return _handleResponse(200, schema, res);
+};
+
+export const handleDeleteSuccessResponse = (param, res) => {
+  const schema = new Schema();
+
+  schema.message = `Successfully deleted entry for the word '${param}'`;
+
+  return _handleResponse(204, schema, res);
+};
+
 export const handleValidationResponse = (errors, body, res) => {
   const schema = new Schema();
   const entry = new Entry(body);
@@ -43,6 +61,19 @@ export const handleUnknownResponse = (error, res) => {
 
   schema.message = error;
   return _handleResponse(500, schema, res);
+};
+
+export const handleNotFoundError = (param, res) => {
+  const schema = new Schema();
+  const entry = new Entry();
+
+  entry.word = param;
+  schema.entry = entry.toJSON();
+
+  schema.error = "Entry Not Found";
+  schema.message = `The word '${param}' does not exist in the dictionary`;
+
+  return _handleResponse(404, schema, res);
 };
 
 export const NotFoundError = (_req, res) => {

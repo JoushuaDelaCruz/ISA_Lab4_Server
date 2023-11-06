@@ -11,13 +11,17 @@ import {
   NotFoundError,
   handleConflictResponse,
   handleCreateSuccessResponse,
+  handleDeleteSuccessResponse,
+  handleNotFoundError,
   handleUnknownResponse,
+  handleUpdateSuccessResponse,
 } from "./handler.js";
 import {
   validateBody,
   validateBodyWithWord,
   validateQuery,
 } from "./validator.js";
+
 const DefinitionRouter = () => {
   const router = express.Router();
 
@@ -51,7 +55,11 @@ const DefinitionRouter = () => {
       definition_language,
     });
 
-    return;
+    if (!result.success) {
+      return handleNotFoundError(word, res);
+    }
+
+    return handleUpdateSuccessResponse(word, req.body, res);
   });
 
   router.get("/:word", validateQuery, async (req, res) => {
@@ -70,8 +78,10 @@ const DefinitionRouter = () => {
     const word = req.params.word;
     const result = await deleteDefinition(word);
 
-    res.json({ result });
-    return;
+    if (!result.success) {
+      return handleNotFoundError(word, res);
+    }
+    return handleDeleteSuccessResponse(word, res);
   });
 
   return router;
