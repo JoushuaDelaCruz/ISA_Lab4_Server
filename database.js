@@ -27,7 +27,7 @@ export const queryEntryCount = async () => {
 };
 
 export const queryLanguage = async () => {
-  return await _execute("SELECT * FROM language");
+  return await _execute("SELECT id, code, name FROM language");
 };
 
 export const insertDefinition = async (entry) => {
