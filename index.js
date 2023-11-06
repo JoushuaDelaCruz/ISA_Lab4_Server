@@ -101,6 +101,7 @@ const LanguagesRouter = () => {
 
 const App = () => {
   const app = express();
+  const PORT = process.env.PORT || 3000;
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -111,7 +112,7 @@ const App = () => {
   app.use("/api/v1/languages", LanguagesRouter());
   app.use("*", NotFoundError);
 
-  app.listen(process.env.PORT || 3000, () => {
+  app.listen(PORT, () => {
     console.log("Serving...");
   });
 };
