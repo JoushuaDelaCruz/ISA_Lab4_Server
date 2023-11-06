@@ -8,6 +8,7 @@ import {
   SuccessfulEntry,
   SuccessfulUpdate,
 } from "./constants.js";
+
 const _handleResponse = async (statusCode, schema, res) => {
   const result = await queryEntryCount();
 
