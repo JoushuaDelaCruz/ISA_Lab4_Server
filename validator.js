@@ -45,3 +45,13 @@ export const validateBodyWithWord = async (req, res, next) => {
   }
   next();
 };
+
+export const validateBodyWithJustWord = async (req, res, next) => {
+  await body("word").exists().isString().run(req);
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    handleValidationResponse(result.mapped(), req.body, res);
+    return;
+  }
+  next();
+};

@@ -18,6 +18,7 @@ import {
 } from "./handler.js";
 import {
   validateBody,
+  validateBodyWithJustWord,
   validateBodyWithWord,
   validateQuery,
 } from "./validator.js";
@@ -44,9 +45,8 @@ const DefinitionRouter = () => {
     return handleCreateSuccessResponse(req.body, res);
   });
 
-  router.patch("/:word", validateQuery, validateBody, async (req, res) => {
-    const word = req.params.word;
-    const { definition, word_language, definition_language } = req.body;
+  router.patch("/", validateBodyWithWord, async (req, res) => {
+    const { word, definition, word_language, definition_language } = req.body;
 
     const result = await updateDefinition({
       word,
@@ -74,8 +74,8 @@ const DefinitionRouter = () => {
    * `deleted` field in response indicates if affected rows > 0.
    * @returns {boolean} true if entry was deleted, false otherwise.
    */
-  router.delete("/:word", validateQuery, async (req, res) => {
-    const word = req.params.word;
+  router.delete("/", validateBodyWithJustWord, async (req, res) => {
+    const { word } = req.body;
     const result = await deleteDefinition(word);
 
     if (!result.success) {
